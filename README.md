@@ -25,4 +25,5 @@ This package is primarily designed to be used inside of your app's authenticatio
 
 # Related packages
 Also check out my package for embedding PowerBI reports via PHP.
+
 [PhpPowerBI](https://github.com/khoelck0315/PhpPowerBI/tree/main)
