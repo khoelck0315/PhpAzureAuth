@@ -1,0 +1,21 @@
+{
+    "name": "khoelck/phpazureauth",
+    "description": "A library to generate Azure tokens for consuming services, using ROPC authentication method via PHP.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Khoelck\\Phpazureauth\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Kevin Hoelck",
+            "email": "khoelck0315@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+		"php": ">=7.4.11"
+	}
+}
