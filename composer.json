@@ -8,7 +8,8 @@
             "Khoelck\\Phpazureauth\\": "src/"
         },
 	"files": [
-		"src/PhpAzureAuth.php"
+		"src/AzureAuth.php",
+		"src/Scope.php"
 	]
     },
     "authors": [
