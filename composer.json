@@ -6,7 +6,10 @@
     "autoload": {
         "psr-4": {
             "Khoelck\\Phpazureauth\\": "src/"
-        }
+        },
+	"files": [
+		"src/PhpAzureAuth.php"
+	]
     },
     "authors": [
         {
@@ -17,5 +20,5 @@
     "minimum-stability": "stable",
     "require": {
 		"php": ">=7.4.11"
-	}
+     }
 }
