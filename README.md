@@ -8,7 +8,7 @@ The recommended way to install is via composer
 
 ### Composer install
 ```
-composer require phpazureauth
+composer require khoelck/phpazureauth
 ```
 
 [PhpAzureAuth on Packagist](https://packagist.org/packages/khoelck/phpazureauth#dev-main)
