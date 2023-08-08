@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Khoelck\PhpAzureAuth {        
-    require "AzureConfig.php";
+    require_once "AzureConfig.php";
+    use Khoelck\PhpAzureAuth\AzureConfig;
     use stdClass;
 
     class AzureAuth {
