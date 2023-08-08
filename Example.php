@@ -3,8 +3,8 @@
 	// OAuth 2.0 ROPC grant flow.  Ideally, this would be included in your app's authentication script.
 	// https://learn.microsoft.com/en-us/azure/active-directory/develop/v2-oauth-ropc
 	
-	require "include_path/AzureAuth/Scope.php";
-	require "include_path/AzureAuth/AzureAuth.php";
+	require "../vendor/autoload.php";
+	require "include_path/AzureAuth/AzureConfig.php";
 	use Khoelck\PhpAzureAuth\AzureAuth;
 	use Khoelck\PhpAzureAuth\Scope;
 	
