@@ -32,10 +32,10 @@ namespace Khoelck\PhpAzureAuth {
             }
         }
 
-        public function AddToSession(): array {
-            $expiration = time() + $this->Token->expires_in;
-            return array("BaseScope"=> $this->Token->scope,
-                         "Token"=>$this->Token,
+        public static function AddToSession($token): array {
+            $expiration = time() + $token->expires_in;
+            return array("BaseScope"=> $token->scope,
+                         "Token"=>$token,
                          "Expiration"=>$expiration
                         );
         }
@@ -111,7 +111,7 @@ namespace Khoelck\PhpAzureAuth {
         private string $AuthURL;
         private string $Scope;
         private string $TenantID;
-        private stdClass $Token;
+        public stdClass $Token;
     }
 
 }
