@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 namespace Khoelck\PhpAzureAuth {        
+    require_once "AzureConfig.php";
     use stdClass;
+    use Exception;
 
     class AzureAuth {
 
@@ -15,12 +17,12 @@ namespace Khoelck\PhpAzureAuth {
         public function __construct(string $username, string $password, string $scope) {
             $this->Username = $username;
             $this->Password = $password;
-            $this->ClientID = AzureConfig::$ClientID;
-            $this->ClientSecret = AzureConfig::$ClientSecret;
+            $this->ClientID = getenv("CLIENT_ID");
+            $this->ClientSecret = getenv("CLIENT_SECRET");
             $this->GrantType = "password";
-            $this->AuthURL = AzureConfig::$AuthURL;
+            $this->AuthURL = getenv("AUTH_URL");
             $this->Scope = $scope;
-            $this->TenantID = AzureConfig::$TenantID;
+            $this->TenantID = getenv("TENANT_ID");
 
             try {
                 $this->Token = $this->GetAccessToken();
@@ -30,10 +32,10 @@ namespace Khoelck\PhpAzureAuth {
             }
         }
 
-        public static function AddToSession(stdClass $token): array {
-            $expiration = time() + $token->expires_in;
-            return array("BaseScope"=> $token->scope,
-                         "Token"=>$token,
+        public function AddToSession(): array {
+            $expiration = time() + $this->Token->expires_in;
+            return array("BaseScope"=> $this->Token->scope,
+                         "Token"=>$this->Token,
                          "Expiration"=>$expiration
                         );
         }
@@ -41,13 +43,13 @@ namespace Khoelck\PhpAzureAuth {
         public static function RefreshToken(stdClass $token) : bool {
             $getToken = curl_init();
             
-            $tokenRequest =  "client_id="     .  AzureConfig::$ClientID       . "&";
-            $tokenRequest .= "tenant="        .  AzureConfig::$TenantID       . "&";
+            $tokenRequest =  "client_id="     .  getenv("CLIENT_ID")      . "&";
+            $tokenRequest .= "tenant="        .  getenv("TENANT_ID")       . "&";
             $tokenRequest .= "grant_type="    .  "refresh_token"              . "&";
             $tokenRequest .= "refresh_token=" .  $token->refresh_token        . "&";
-            $tokenRequest .= "client_secret=" .  AzureConfig::$ClientSecret;
+            $tokenRequest .= "client_secret=" .  getenv("CLIENT_SECRET");
 
-            curl_setopt($getToken, CURLOPT_URL, AzureConfig::$AuthURL);
+            curl_setopt($getToken, CURLOPT_URL, getenv("AUTH_URL"));
             curl_setopt($getToken, CURLOPT_POST, 1);
             curl_setopt($getToken, CURLOPT_POSTFIELDS, $tokenRequest);
             curl_setopt($getToken, CURLOPT_RETURNTRANSFER, true);
@@ -77,20 +79,28 @@ namespace Khoelck\PhpAzureAuth {
             $tokenRequest .= "tenant="        .  $this->TenantID       . "&";
             $tokenRequest .= "client_secret=" .  $this->ClientSecret;
 
-            curl_setopt($getToken, CURLOPT_URL, AzureConfig::$AuthURL);
+            curl_setopt($getToken, CURLOPT_URL, $this->AuthURL);
             curl_setopt($getToken, CURLOPT_POST, 1);
             curl_setopt($getToken, CURLOPT_POSTFIELDS, $tokenRequest);
             curl_setopt($getToken, CURLOPT_RETURNTRANSFER, true);
 
             // Make the HTTP request for the report, and parse the JSON into an object
-            echo $tokenRequest;
-            $token = json_decode(curl_exec($getToken));
+            //echo $tokenRequest;
+			$result = curl_exec($getToken);
+			if(!$result) {
+				echo curl_error($getToken);
+				error_log(curl_error($getToken));
+			}
+			else {
+				$token = json_decode($result);	
+			    if(property_exists($token, "error")) {
+					error_log("Error obtaining access token: ".$token->error_description);
+					throw new Exception();
+				}
+				else return $token;
+			}
             curl_close($getToken);
-            if(property_exists($token, "error")) {
-                error_log("Error obtaining access token: ".$token->error_description);
-                throw new Exception();
-            }
-            else return $token;
+         
         }
 
         private string $Username;
@@ -100,6 +110,8 @@ namespace Khoelck\PhpAzureAuth {
         private string $GrantType;
         private string $AuthURL;
         private string $Scope;
+        private string $TenantID;
+        private stdClass $Token;
     }
 
 }
