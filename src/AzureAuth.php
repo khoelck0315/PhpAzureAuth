@@ -28,7 +28,7 @@ namespace Khoelck\PhpAzureAuth {
                 $this->Token = $this->GetAccessToken();
             }
             catch(Exception $e) {
-                error_log("Unable to create new instance of AzureAuth.  ".$e->getTrace());
+                error_log("Unable to create new instance of AzureAuth.  ".$e->getMessage());
             }
         }
 
@@ -95,7 +95,7 @@ namespace Khoelck\PhpAzureAuth {
 				$token = json_decode($result);	
 			    if(property_exists($token, "error")) {
 					error_log("Error obtaining access token: ".$token->error_description);
-					throw new Exception();
+					throw new Exception("Error obtaining access token: ".$token->error_description);
 				}
 				else return $token;
 			}
